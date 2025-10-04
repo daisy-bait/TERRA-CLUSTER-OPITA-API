@@ -1,9 +1,12 @@
 package co.opita.cluster.terraclusteropita.services;
 
 import co.opita.cluster.terraclusteropita.dto.ProjectionDTO;
+import co.opita.cluster.terraclusteropita.entities.GibsEntity;
+
+import java.util.Optional;
 
 public interface GibsService {
 
-    public byte[] fetchProjection(ProjectionDTO projection);
-
+    byte[] fetchProjection(ProjectionDTO projection);
+    Optional<GibsEntity> getById(Long id);
 }
