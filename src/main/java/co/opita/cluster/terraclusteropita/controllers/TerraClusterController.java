@@ -1,7 +1,7 @@
 package co.opita.cluster.terraclusteropita.controllers;
 
-import co.opita.cluster.terraclusteropita.clients.GibsEarthDataClient;
 import co.opita.cluster.terraclusteropita.dto.ProjectionDTO;
+import co.opita.cluster.terraclusteropita.services.GibsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/gibs")
 public class TerraClusterController {
 
-    private final GibsEarthDataClient gibsClient;
+    private final GibsService gibsService;
 
     @GetMapping("/projection")
     public ResponseEntity<byte[]> getProjection(@RequestBody ProjectionDTO projection) {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(
-                gibsClient.executeGetGibsGeographicProjection(
-                        projection.getLayerIdentifier(),
-                        projection.getTime(),
-                        projection.getTileMatrixSet(),
-                        projection.getTileMatrix(),
-                        projection.getTileRow(),
-                        projection.getTileCol(),
-                        projection.getFormat()
-                )
+                gibsService.fetchProjection(projection)
         );
     }
 
