@@ -12,7 +12,7 @@ spring:
   ## SQLite BBDD Connection
   datasource:
     driver-class-name: org.sqlite.JDBC
-    url: jdbc:sqlite:/app/data/app.db
+    url: jdbc:sqlite:./src/main/resources/data/app.db
   sql:
     init:
       mode: always
