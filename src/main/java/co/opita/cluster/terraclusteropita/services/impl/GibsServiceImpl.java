@@ -25,6 +25,7 @@ public class GibsServiceImpl implements GibsService {
         log.setDate(LocalDateTime.now());
         log.setFormat(projection.getFormat());
         log.setResolution(projection.getTileMatrixSet());
+        log.setLayers(projection.getLayerIdentifier());
         gibsRepository.save(log);
 
         return gibClient.executeGetGibsGeographicProjection(

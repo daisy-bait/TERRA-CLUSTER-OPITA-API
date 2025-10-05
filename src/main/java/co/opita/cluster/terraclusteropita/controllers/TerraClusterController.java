@@ -17,7 +17,6 @@ public class TerraClusterController {
 
     @GetMapping("/projection")
     public ResponseEntity<byte[]> getProjection(@RequestBody ProjectionDTO projection) {
-        System.out.println(projection.toString());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(
                 gibsService.fetchProjection(projection)
         );
