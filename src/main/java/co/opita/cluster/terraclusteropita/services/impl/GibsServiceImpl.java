@@ -28,7 +28,7 @@ public class GibsServiceImpl implements GibsService {
         log.setEndpoint("/projection");
         log.setDate(LocalDateTime.now());
         log.setFormat(projection.getFormat());
-        log.setResolution(null);
+        log.setResolution(projection.getBbox());
         gibsRepository.save(log);
 
         return callGibsClient(projection, projection.getStartDate());
@@ -40,7 +40,7 @@ public class GibsServiceImpl implements GibsService {
         log.setEndpoint("/projection");
         log.setDate(LocalDateTime.now());
         log.setFormat(projection.getFormat());
-        log.setResolution(null);
+        log.setResolution(projection.getBbox());
         gibsRepository.save(log);
 
         List<String> timelapse = repeatPetitionPerTimestamp(projection);
