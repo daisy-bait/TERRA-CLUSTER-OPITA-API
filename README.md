@@ -1,13 +1,14 @@
 # A.D.A API
 
-TerraCluster es una API desarrollada en Java con Spring Boot como parte del **NASA Space Apps Challenge**. Su propósito es consumir y exponer datos de **NASA GIBS (Global Imagery Browse Services)** para visualización y análisis ambiental.
+A.DA. es una API desarrollada en Java con Spring Boot como parte del **NASA Space Apps Challenge**. Su propósito es consumir y exponer datos de **NASA GIBS (Global Imagery Browse Services)** para visualización y análisis.
 
 ## Características principales
 
 * Obtención de proyecciones geográficas en formato imagen.
 * Generación de timelapse con múltiples fechas.
-* Registro y consulta de logs de peticiones.
-* Contador de solicitudes realizadas.
+* Persistencia de logs de peticiones realizadas al servicio.
+* Endpoints para consultar y gestionar capas (layers).
+* Métricas de uso mediante un contador de peticiones.
 * Documentación interactiva con **Swagger**.
 
 ## Documentación Swagger
