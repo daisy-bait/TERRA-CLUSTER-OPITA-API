@@ -12,7 +12,7 @@ public interface GibsEarthDataClient {
     @GetMapping
     byte[] executeGetGibsGeographicProjection(
             @RequestParam(name = "LAYERS") String layerIdentifiers,
-            @RequestParam(name = "FOgRMAT") String format,
+            @RequestParam(name = "FORMAT") String format,
             @RequestParam(name = "TIME") String time,
             @RequestParam(name = "BBOX") String bbox,
             @RequestParam(name = "WIDTH") String width,
