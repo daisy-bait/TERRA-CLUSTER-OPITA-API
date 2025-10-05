@@ -1,80 +1,148 @@
-# TerraCluster API
+# A.D.A API
 
-TerraCluster es una API desarrollada en Java con Spring Boot como parte del reto de la NASA Space Apps Challenge. Su objetivo es facilitar el acceso a datos satelitales provenientes de **NASA GIBS (Global Imagery Browse Services)**, procesar proyecciones geográficas y exponer servicios para análisis ambiental.
+TerraCluster es una API desarrollada en Java con Spring Boot como parte del **NASA Space Apps Challenge**. Su propósito es consumir y exponer datos de **NASA GIBS (Global Imagery Browse Services)** para visualización y análisis ambiental.
 
 ## Características principales
 
-* Conexión con **GIBS Earth Data** para obtener proyecciones geográficas.
-* Descarga de imágenes en diferentes formatos y resoluciones.
-* Generación de timelapses a partir de rangos de fechas.
-* Persistencia de logs de peticiones realizadas al servicio.
-* Endpoints para consultar y gestionar capas (`layers`).
-* Métricas de uso mediante un contador de peticiones.
+* Obtención de proyecciones geográficas en formato imagen.
+* Generación de timelapse con múltiples fechas.
+* Registro y consulta de logs de peticiones.
+* Contador de solicitudes realizadas.
+* Documentación interactiva con **Swagger**.
+
+## Documentación Swagger
+
+La documentación de la API está disponible al ejecutar el proyecto en:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+o en
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
 
 ## Endpoints disponibles
 
-### Projections
+### 1. Proyección simple
 
-| Método | Endpoint                | Descripción                                                                                                                       |
-| ------ | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | `/projection`           | Realiza una proyección con los parámetros enviados en el cuerpo (formato, fechas, bbox, capa, etc.). Devuelve la imagen en bytes. |
-| `POST` | `/projection/timelapse` | Genera un conjunto de proyecciones para un rango de fechas. Devuelve las imágenes codificadas en Base64.                          |
-| `GET`  | `/projection/{id}`      | Obtiene un log de proyección almacenado por su identificador.                                                                     |
-| `GET`  | `/projection/count`     | Devuelve la cantidad total de proyecciones solicitadas.                                                                           |
-
-### Layers
-
-| Método | Endpoint       | Descripción                                    |
-| ------ | -------------- | ---------------------------------------------- |
-| `GET`  | `/layers`      | Lista todas las capas disponibles.             |
-| `GET`  | `/layers/{id}` | Obtiene la información de una capa específica. |
-
-## Ejemplo de uso
-
-### 1. Solicitar una proyección
+Obtiene una imagen proyectada para una fecha específica.
 
 ```http
-POST /projection
-Content-Type: application/json
+GET /api/gibs/projection
+```
 
+**Parámetros (query):**
+
+* `LAYERS` (String) → Identificador de la capa.
+* `FORMAT` (String) → Formato de salida (ej. `image/png`).
+* `TIME` (String) → Fecha en formato `YYYY-MM-DD`.
+* `BBOX` (String) → Extensión geográfica (ej. `-8295668.45,475018.02,-8195668.45,575018.02`).
+* `WIDTH` (String) → Ancho de la imagen en píxeles.
+* `HEIGHT` (String) → Alto de la imagen en píxeles.
+
+**Ejemplo:**
+
+```
+GET /api/gibs/projection?LAYERS=CERES_Terra_Surface_UV_Index_All_Sky_Monthly&FORMAT=image/png&TIME=2000-07-12&BBOX=-8295668.45,475018.02,-8195668.45,575018.02&WIDTH=512&HEIGHT=512
+```
+
+**Respuesta:**
+Imagen en bytes (MIME type: `image/png`).
+
+---
+
+### 2. Proyección múltiple (timelapse)
+
+Genera una secuencia de imágenes en Base64 entre dos fechas.
+
+```http
+GET /api/gibs/projections
+```
+
+**Parámetros (query):**
+
+* `LAYERS` (String) → Identificador de la capa.
+* `FORMAT` (String) → Formato de salida.
+* `START_DATE` (String) → Fecha de inicio (`YYYY-MM-DD`).
+* `END_DATE` (String) → Fecha de fin (`YYYY-MM-DD`).
+* `BBOX` (String) → Extensión geográfica.
+* `WIDTH` (String) → Ancho de la imagen en píxeles.
+* `HEIGHT` (String) → Alto de la imagen en píxeles.
+
+**Ejemplo:**
+
+```
+GET /api/gibs/projections?LAYERS=MODIS_Terra_Thermal_Anomalies_All&FORMAT=image/png&START_DATE=2024-09-01&END_DATE=2024-09-30&BBOX=-8295668.45,475018.02,-8195668.45,575018.02&WIDTH=512&HEIGHT=512
+```
+
+**Respuesta:**
+
+```json
+[
+  "iVBORw0KGgoAAAANSUhEUgAAAgAAAAIA...",
+  "iVBORw0KGgoAAAANSUhEUgAAAgAAAAIA..."
+]
+```
+
+---
+
+### 3. Consultar log por ID
+
+Obtiene un log de petición registrada.
+
+```http
+GET /api/gibs/logs/{id}
+```
+
+**Ejemplo:**
+
+```
+GET /api/gibs/logs/1
+```
+
+**Respuesta:**
+
+```json
 {
-  "layerIdentifiers": ["MODIS_Terra_Thermal_Anomalies_All"],
+  "id": 1,
+  "endpoint": "/projection",
+  "date": "2025-10-04T13:20:15.112",
   "format": "image/png",
-  "startDate": "2024-09-01",
-  "endDate": "2024-09-30",
-  "bbox": "-8295668.45,475018.02,-8195668.45,575018.02",
-  "width": 512,
-  "height": 512
+  "resolution": null
 }
 ```
 
-### 2. Obtener proyección por ID
+---
+
+### 4. Contador de peticiones
+
+Devuelve la cantidad total de peticiones realizadas.
 
 ```http
-GET /projection/1
+GET /api/gibs/logs/count
 ```
 
-### 3. Consultar total de peticiones
+**Ejemplo de respuesta:**
 
-```http
-GET /projection/count
+```json
+42
 ```
 
-### 4. Listar capas disponibles
-
-```http
-GET /layers
-```
+---
 
 ## Tecnologías usadas
 
 * Java 17
 * Spring Boot
+* Spring Data JPA
+* PostgreSQL (recomendado)
 * Lombok
-* JPA / Hibernate
-* Base de datos relacional (PostgreSQL recomendado)
+* Swagger / SpringDoc OpenAPI
 
-## Cómo ejecutar el proyecto
+## Ejecución del proyecto
 
 1. Clonar el repositorio:
 
@@ -83,12 +151,12 @@ GET /layers
    cd terracluster-api
    ```
 
-2. Configurar las variables de entorno o `application.yml` con:
+2. Configurar `application.yml` con:
 
    * Credenciales de la base de datos
-   * Configuración del cliente GIBS
+   * Configuración de cliente GIBS
 
-3. Ejecutar el proyecto:
+3. Ejecutar:
 
    ```bash
    ./mvnw spring-boot:run
@@ -97,12 +165,14 @@ GET /layers
 4. Acceder a la API en:
 
    ```
-   http://localhost:8080
+   http://localhost:8080/api/gibs
    ```
+
+---
 
 ## Próximos pasos
 
-* Implementar autenticación y autorización.
-* Exponer métricas con **Spring Actuator**.
-* Añadir cacheo de respuestas para optimizar el consumo de datos de GIBS.
-* Extender soporte para más servicios de NASA.
+* Integrar autenticación JWT.
+* Cachear respuestas frecuentes para optimizar consumo de GIBS.
+* Añadir más endpoints de consulta de capas (`layers findAll`, `findById`).
+* Mejorar estadísticas con métricas de uso expuestas vía Actuator.
