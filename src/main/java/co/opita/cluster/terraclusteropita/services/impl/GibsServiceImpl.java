@@ -96,7 +96,8 @@ public class GibsServiceImpl implements GibsService {
                     break;
                 }
                 String month = (currentMonth < 10) ? "0" + currentMonth : "" + currentMonth;
-                timestamps.add(String.format("%d-%s-%d", currentYear, month, day));
+                String actualDay = (day < 10) ? "0" + day : "" + day;
+                timestamps.add(String.format("%d-%s-%s", currentYear, month, actualDay));
                 currentMonth++;
             }
             currentMonth = 1;
