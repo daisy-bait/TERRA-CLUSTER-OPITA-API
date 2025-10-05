@@ -12,7 +12,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("TERRA Cluster OPITA API")
+                        .title("A.D.A API")
                         .version("1.0")
                         .description("Documentación del API para gestionar capas y GIBS"));
     }
