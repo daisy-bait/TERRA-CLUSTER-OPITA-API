@@ -139,7 +139,7 @@ GET /api/gibs/logs/count
 * Java 17
 * Spring Boot
 * Spring Data JPA
-* PostgreSQL (recomendado)
+* SqlLite
 * Lombok
 * Swagger / SpringDoc OpenAPI
 
