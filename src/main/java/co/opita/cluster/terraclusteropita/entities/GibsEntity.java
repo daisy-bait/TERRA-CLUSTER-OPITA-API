@@ -21,6 +21,4 @@ public class GibsEntity {
     private String resolution;
     private LocalDateTime date;
 
-
-
 }
