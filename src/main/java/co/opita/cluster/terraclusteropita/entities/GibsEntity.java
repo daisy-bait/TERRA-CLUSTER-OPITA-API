@@ -19,6 +19,7 @@ public class GibsEntity {
     private String endpoint;
     private String format;
     private String resolution;
+    private String layers;
     private LocalDateTime date;
 
 }

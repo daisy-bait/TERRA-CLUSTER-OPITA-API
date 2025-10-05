@@ -2,6 +2,8 @@ package co.opita.cluster.terraclusteropita.controllers;
 
 import co.opita.cluster.terraclusteropita.dto.ProjectionDTO;
 import co.opita.cluster.terraclusteropita.entities.GibsEntity;
+import co.opita.cluster.terraclusteropita.entities.LayersEntity;
+import co.opita.cluster.terraclusteropita.services.LayerService;
 import co.opita.cluster.terraclusteropita.services.GibsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/gibs")
 public class TerraClusterController {
 
+    private final LayerService layerService;
     private final GibsService gibsService;
 
     @GetMapping("/projection")
@@ -54,6 +57,19 @@ public class TerraClusterController {
         return gibsService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/layers/{id}")
+    public ResponseEntity<LayersEntity> getLayerById(@PathVariable Long id) {
+        return layerService.getLayerById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/layers")
+    public ResponseEntity<List<LayersEntity>> getLayers() {
+        List<LayersEntity> layers = layerService.getAllLayers();
+        return ResponseEntity.ok(layers);
     }
 
     @GetMapping("logs/count")
