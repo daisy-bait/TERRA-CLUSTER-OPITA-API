@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 public class ProjectionDTO {
 
-    private String layerIdentifier;
-    private String time;
-    private String tileMatrixSet;
-    private String tileMatrix;
-    private String tileRow;
-    private String tileCol;
+    private String layerIdentifiers;
     private String format;
+    private String startDate;
+    private String endDate;
+    private String bbox;
+    private String width;
+    private String height;
 
 }
